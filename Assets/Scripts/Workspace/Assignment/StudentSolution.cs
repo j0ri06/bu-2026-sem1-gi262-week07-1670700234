@@ -1,21 +1,15 @@
 using System;
-using UnityEngine;
-
 
 namespace Assignment
 {
     public class StudentSolution : IAssignment
     {
-        #region Lecture
-
         public int LCT01_SequentialSearch1DArray()
         {
             int[] array = new int[] { 34, 21, 56, 12, 78, 90, 11, 23 };
             int target = 90;
             int index = -1;
 
-            // Your code here ...
-            // ...
             for (int i = 0; i < array.Length; i++)
             {
                 if (array[i] == target)
@@ -23,11 +17,6 @@ namespace Assignment
                     index = i;
                     break;
                 }
-            }
-
-            if (index == -1)
-            {
-                Debug.Log("Find not Found!");
             }
 
             return index;
@@ -45,26 +34,21 @@ namespace Assignment
             int row = -1;
             int col = -1;
 
-            // Your code here ...
-            // ...
-            for (int i = 0; i < array.GetLength(0); i++)
+            for (int r = 0; r < array.GetLength(0); r++)
             {
-                for (int j = 0; j < array.GetLength(1); j++)
+                for (int c = 0; c < array.GetLength(1); c++)
                 {
-                    if (array[i, j] == target)
+                    if (array[r, c] == target)
                     {
-                        row = i;
-                        col = j;
+                        row = r;
+                        col = c;
                         break;
                     }
                 }
-                if (row != -1 && col != -1)
-                {
-                    break;
-                }
+                if (row != -1) break;
             }
 
-            return new[] { row, col };
+            return new int[] { row, col };
         }
 
         public int LCT03_BinarySearch()
@@ -74,12 +58,12 @@ namespace Assignment
             int index = -1;
 
             int left = 0;
-            int right = array.Length;
-            // Your code here ...
-            // ...
+            int right = array.Length - 1;
+
             while (left <= right)
             {
-                int mid = (left + right) / 2;
+                int mid = left + (right - left) / 2;
+
                 if (array[mid] == target)
                 {
                     index = mid;
@@ -88,49 +72,128 @@ namespace Assignment
                 else if (array[mid] < target)
                 {
                     left = mid + 1;
-
                 }
-                else if (array[mid] > target)
+                else
                 {
                     right = mid - 1;
                 }
-            }
-            if (index == -1)
-            {
-                Debug.Log("Find not Found!");
             }
 
             return index;
         }
 
-        #endregion
-
-        #region Assignment
-
         public int[] AS01_FindFirstAndLastElementOfArray(int[] array, int target)
         {
-            throw new NotImplementedException();
+            int firstIndex = -1;
+            int lastIndex = -1;
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] == target)
+                {
+                    if (firstIndex == -1)
+                    {
+                        firstIndex = i;
+                    }
+                    lastIndex = i;
+                }
+            }
+
+            if (firstIndex == -1)
+            {
+                return new int[] { -1 };
+            }
+
+            return new int[] { firstIndex, lastIndex };
         }
 
         public int AS02_FindMaxLessThan(int[] array, int target)
         {
-            throw new NotImplementedException();
+            int maxVal = -1;
+            bool found = false;
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] < target)
+                {
+                    if (!found || array[i] > maxVal)
+                    {
+                        maxVal = array[i];
+                        found = true;
+                    }
+                }
+            }
+
+            return found ? maxVal : -1;
         }
 
         public int[] AS03_FindRange(int[] array, int min, int max)
         {
-            throw new NotImplementedException();
+            int count = 0;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] >= min && array[i] <= max)
+                {
+                    count++;
+                }
+            }
+
+            int[] result = new int[count];
+            int index = 0;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] >= min && array[i] <= max)
+                {
+                    result[index] = array[i];
+                    index++;
+                }
+            }
+
+            return result;
         }
-
-        #endregion
-
-        #region Extra
 
         public int[] EX01_FindTargetEnemies(int[] enemyHPs, int mana)
         {
-            throw new NotImplementedException();
-        }
+            int[] sortedHPs = new int[enemyHPs.Length];
+            for (int i = 0; i < enemyHPs.Length; i++)
+            {
+                sortedHPs[i] = enemyHPs[i];
+            }
+            Array.Sort(sortedHPs);
 
-        #endregion
+            int count = 0;
+            int currentMana = mana;
+            for (int i = 0; i < sortedHPs.Length; i++)
+            {
+                if (currentMana >= sortedHPs[i])
+                {
+                    currentMana -= sortedHPs[i];
+                    count++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            int[] result = new int[count];
+            currentMana = mana;
+            int index = 0;
+            for (int i = 0; i < sortedHPs.Length; i++)
+            {
+                if (currentMana >= sortedHPs[i])
+                {
+                    result[index] = sortedHPs[i];
+                    currentMana -= sortedHPs[i];
+                    index++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return result;
+        }
     }
 }
